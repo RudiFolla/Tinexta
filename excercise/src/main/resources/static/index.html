@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Maven Artifact Search</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 2em auto; }
+        input, button { padding: 0.5em; font-size: 1em; }
+        .artifact { border: 1px solid #ccc; margin-top: 1em; padding: 1em; border-radius: 5px; }
+        .artifact h3 { margin: 0 0 0.5em 0; }
+
+        .tag {
+          display: inline-block;
+          background-color: #007bff;
+          color: white;
+          padding: 0.15em 0.5em;
+          margin-right: 0.3em;
+          border-radius: 3px;
+          font-size: 0.85em;
+          font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<h1>Maven Artifact Search</h1>
+
+<form id="searchForm">
+    <label>
+        Group ID: <input type="text" id="groupId" required />
+    </label><br/><br/>
+    <label>
+        Artifact ID: <input type="text" id="artifactId" required />
+    </label><br/><br/>
+    <button type="submit">Search</button>
+</form>
+
+<div id="results"></div>
+
+<script>
+    const form = document.getElementById('searchForm');
+    const resultsDiv = document.getElementById('results');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      resultsDiv.textContent = 'Loading...';
+
+      const groupId = document.getElementById('groupId').value.trim();
+      const artifactId = document.getElementById('artifactId').value.trim();
+
+      if (!groupId || !artifactId) {
+        resultsDiv.textContent = 'Please enter both Group ID and Artifact ID.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/v1/search?groupId=${encodeURIComponent(groupId)}&artifactId=${encodeURIComponent(artifactId)}`);
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const artifacts = await response.json();
+
+        if (!Array.isArray(artifacts) || artifacts.length === 0) {
+          resultsDiv.textContent = 'No artifacts found.';
+          return;
+        }
+
+        resultsDiv.innerHTML = '';
+
+        artifacts.forEach(artifact => {
+          const div = document.createElement('div');
+          div.classList.add('artifact');
+
+          let tagsHtml = '';
+          if (Array.isArray(artifact.tags) && artifact.tags.length > 0) {
+            tagsHtml = '<p><strong>Tags:</strong> ' + artifact.tags.map(tag => `<span class="tag">${tag}</span>`).join(', ') + '</p>';
+          }
+
+          div.innerHTML = `
+            <h3>${artifact.id || 'No ID'}</h3>
+            <p><strong>Artifact:</strong> ${artifact.a || 'N/A'}</p>
+            <p><strong>Group:</strong> ${artifact.g || 'N/A'}</p>
+            <p><strong>Timestamp:</strong> ${artifact.timestamp ? new Date(artifact.timestamp).toLocaleString() : 'N/A'}</p>
+            <p><strong>Version:</strong> ${artifact.v || 'N/A'}</p>
+            ${tagsHtml}
+          `;
+          resultsDiv.appendChild(div);
+        });
+
+      } catch (error) {
+        resultsDiv.textContent = 'Error fetching artifacts: ' + error.message;
+      }
+    });
+</script>
+</body>
+</html>

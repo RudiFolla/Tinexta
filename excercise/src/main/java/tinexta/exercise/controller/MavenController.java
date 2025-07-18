@@ -1,11 +1,11 @@
-package tinexta.excercise.controller;
+package tinexta.exercise.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import tinexta.excercise.service.MavenService;
+import tinexta.exercise.service.MavenService;
 
 @RestController
 @RequestMapping("/api/v1")

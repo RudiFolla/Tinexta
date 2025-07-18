@@ -1,4 +1,4 @@
-package tinexta.excercise.client;
+package tinexta.exercise.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +15,13 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class MavenClient {
     private static final String MAVEN_SEARCH_API_URL = "https://search.maven.org/solrsearch/select";
-    private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient;
+    private final ObjectMapper objectMapper;
 
+    public MavenClient(HttpClient httpClient, ObjectMapper objectMapper) {
+        this.httpClient = httpClient;
+        this.objectMapper = objectMapper;
+    }
     public JsonNode search(String groupId, String artifactId) {
         try {
             String query = String.format("g:%s+AND+a:%s",

@@ -1,13 +1,13 @@
-package tinexta.excercise;
+package tinexta.exercise;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ExcerciseApplication {
+public class ExerciseApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ExcerciseApplication.class, args);
+		SpringApplication.run(ExerciseApplication.class, args);
 	}
 
 }

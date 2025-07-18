@@ -1,10 +1,10 @@
-package tinexta.excercise;
+package tinexta.exercise;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ExcerciseApplicationTests {
+class ExerciseApplicationTests {
 
 	@Test
 	void contextLoads() {
